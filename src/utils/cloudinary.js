@@ -20,6 +20,7 @@ const uploadResponse=await cloudinary.uploader.upload(localFilePath,{
 
 // file uploaded successfully
 console.log("file uploaded successfully ",uploadResponse.url)
+fs.unlinkSync(localFilePath)
 return uploadResponse
 } catch (error) {
     fs.unlinkSync(localFilePath)//remove the locally save temp file as

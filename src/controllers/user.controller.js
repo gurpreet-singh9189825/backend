@@ -7,7 +7,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 const registerUser = asyncHandler(async (req, res) => {
   //get user details from frontend
   //validations data not empty
-  //check if user already exist:username email to be checked
+  //check if user already exist: email to be checked
   //check for images check for avatar
   //upload them to cloudinary avatar
   //create user object create entry in db
@@ -17,26 +17,33 @@ const registerUser = asyncHandler(async (req, res) => {
   //return response otherwise error
 
   //get userdata from frontend
-  const { fullName, email, userName, password } = req.body;
+  const { fullName, email, username, password } = req.body;
+  console.log("username",username)
   //validation
   if (
-    [fullName, email, userName, password].some((field) => {
+    [fullName, email, username, password].some((field) => {
       return field?.trim === "";
     })
   ) {
     throw new ApiError(400, "All fields are required");
   }
+
+  
   //User.findOne({email}) give me first user which email match
-  const existedUser = User.findOne({
-    $or: [{ userName }, { email }],
+  const existedUser = await User.findOne({
+    $or: [{ username }, { email }],
   });
 
-  if (existedError) {
-    throw new ApiError(409, "userWith email or username already exist");
+  if (existedUser) {
+    throw new ApiError(409, "user With email or userName already exist");
   }
 
   const avatarLocalPath = req.files?.avatar[0]?.path;
-  const coverImageLocalPath = req.files?.coverImage[0]?.path;
+  // const coverImageLocalPath = req.files?.coverImage[0]?.path;
+  let coverImageLocalPath;
+  if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length>0){
+    coverImageLocalPath=req.files.coverImage[0].path
+  }
 
   if (!avatarLocalPath) {
     throw new ApiError(400, "avatar missing");
@@ -56,7 +63,7 @@ const user = await User.create({
     coverImage:coverImage?.url || "",
     email,
     password,
-    userName:userName.toLowerCase()
+    username:username.toLowerCase()
 })
 
  const createdUser=await User.findById(user._id).select(

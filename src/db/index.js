@@ -12,9 +12,9 @@ const connectDB = async () => {
       `${process.env.MONGODB_URI}/${DB_NAME}`
     );
 
-    app.on("error",(error)=>{
-      console.error(error)
-    })
+    // app.on("error",(error)=>{
+    //   console.error(error)
+    // })
 
 
 

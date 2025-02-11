@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema(
   {
-    userName: {
+    username: {
       type: String,
       required: true,
       unique: true,
@@ -64,7 +64,7 @@ userSchema.methods.generateAccessToken = function () {
     {
       _id: this._id,
       email: this.email,
-      username: this.userName,
+      userame: this.username,
       fullname: this.fullName,
     },
     process.env.ACCESS_TOKEN_SECRET,
